@@ -7,101 +7,113 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary-blue: #1a438d;
-            --secondary-blue: #0d47a1;
-            --light-bg: #f4f7f9;
-            --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            --text-main: #333;
+            --header-blue: #1e3a8a;
+            --gradient-blue: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            --body-bg: #f3f6f9;
+            --card-text: #1e3a8a;
+            --label-gray: #718096;
         }
 
         body { 
             margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--light-bg);
-            color: var(--text-main);
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--body-bg);
+            color: #333;
         }
 
-        /* Top Blue Header */
+        /* Modern Header Bar */
         .main-header {
-            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
-            padding: 15px 40px;
+            background: var(--gradient-blue);
+            margin: 15px;
+            padding: 15px 30px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 0 0 15px 15px;
-            margin: 0 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .logo-box {
+        .logo-container {
             background: white;
-            padding: 10px;
-            border-radius: 8px;
             width: 100px;
-            height: 60px;
+            height: 70px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #1a438d;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 5px;
         }
 
-        .header-text {
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .header-title {
+            color: white;
             text-align: center;
             flex-grow: 1;
         }
 
-        .header-text h1 {
+        .header-title h1 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
-        /* Search Area */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .status-light {
+            font-size: 11px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
 
-        .search-section {
+        /* Main Dashboard Container */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .search-section label { font-weight: 600; display: block; margin-bottom: 8px; color: #555; }
+        /* Search Section */
+        .search-area { margin-bottom: 40px; }
+        .search-label { font-weight: 600; color: #4a5568; margin-bottom: 8px; display: block; }
 
         .search-input {
             width: 100%;
-            padding: 15px 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 16px;
+            background-color: #f8fafc;
             outline: none;
             box-sizing: border-box;
         }
 
-        .search-input:focus { border-color: var(--secondary-blue); box-shadow: 0 0 8px rgba(13,71,161,0.2); }
+        .search-input:focus { border-color: #3b82f6; background: white; }
 
         .suggestions {
             background: white;
-            border: 1px solid #ddd;
-            border-top: none;
-            max-height: 200px;
+            position: absolute;
+            width: calc(100% - 70px);
+            z-index: 100;
+            border: 1px solid #e2e8f0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            max-height: 250px;
             overflow-y: auto;
             display: none;
-            position: absolute;
-            width: calc(100% - 80px);
-            z-index: 100;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .suggestions div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #eee; }
-        .suggestions div:hover { background: #f0f7ff; color: var(--secondary-blue); font-weight: 600; }
+        .suggestions div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
+        .suggestions div:hover { background: #eff6ff; color: #2563eb; }
 
-        /* Grid Cards */
+        /* Modern Grid Cards */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -110,111 +122,119 @@
 
         .card {
             background: white;
-            padding: 25px 20px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            border-top: 5px solid transparent;
-            transition: all 0.3s ease;
-            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            border-top: 5px solid var(--secondary-blue);
+            border-top: 4px solid #3b82f6;
         }
 
         .card h3 {
-            margin: 0;
+            margin: 0 0 15px 0;
             font-size: 14px;
-            color: #666;
+            color: #4a5568;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        .card .val-row {
+        .val-box {
             display: flex;
             align-items: baseline;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .card .val-label { font-size: 16px; color: #999; }
-        .card .val { font-size: 32px; font-weight: 800; color: #1e3a8a; }
+        .val-label { font-size: 14px; color: var(--label-gray); font-weight: 500; }
+        .val-num { font-size: 30px; font-weight: 800; color: var(--card-text); }
 
-        /* Footer */
+        /* Professional Footer */
         .footer {
-            background: #eef2f7;
-            padding: 25px;
-            text-align: center;
-            border-radius: 12px;
             margin-top: 50px;
+            padding: 30px;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 12px;
             font-size: 14px;
-            color: #555;
-            line-height: 1.6;
-            border: 1px solid #dee2e6;
+            color: #64748b;
+            line-height: 1.8;
+            border: 1px solid #e2e8f0;
         }
 
-        #status { font-size: 12px; margin-top: 5px; color: #d1d5db; }
+        .footer b { color: #1e3a8a; }
     </style>
 </head>
 <body>
 
 <header class="main-header">
-    <div class="logo-box">ORCP</div>
+    <div class="logo-container">
+        <img src="orcp.bmp" alt="ORCP">
+    </div>
     
-    <div class="header-text">
+    <div class="header-title">
         <h1>Scaffolding Material Across KSA Region</h1>
-        <div id="status">Connecting to Database...</div>
+        <div id="status" class="status-light">🔄 Connecting to Database...</div>
     </div>
 
-    <div class="logo-box">NBTC</div>
+    <div class="logo-container">
+        <div style="font-weight:bold; color:#1e3a8a">NBTC</div>
+    </div>
 </header>
 
 <div class="container">
-    <div class="search-section">
-        <label>Search Item (Column C)</label>
-        <input type="text" id="searchInput" class="search-input" placeholder="Start typing item description..." disabled>
-        <div id="suggestions" class="suggestions"></div>
+    <div class="search-area">
+        <label class="search-label">Search Item (Column C)</label>
+        <div style="position:relative;">
+            <input type="text" id="searchInput" class="search-input" placeholder="Start typing item description..." disabled>
+            <div id="suggestions" class="suggestions"></div>
+        </div>
     </div>
 
     <div class="grid">
-        <div class="card"><h3>S013 MARJAN</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colL">0</span></div></div>
-        <div class="card"><h3>S022 FADHALI</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colM">0</span></div></div>
-        <div class="card"><h3>S012 EPC</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colN">0</span></div></div>
-        <div class="card"><h3>S015 JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colJ">0</span></div></div>
-        <div class="card"><h3>S016 JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colK">0</span></div></div>
-        <div class="card"><h3>S020 DAMMAM</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colI">0</span></div></div>
-        <div class="card"><h3>NMP JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colO">0</span></div></div>
-        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colQ">0</span></div></div>
-        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colF">0</span></div></div>
-        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colP">0</span></div></div>
+        <div class="card"><h3>S013 MARJAN</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colL">0</span></div></div>
+        <div class="card"><h3>S022 FADHALI</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colM">0</span></div></div>
+        <div class="card"><h3>S012 EPC</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colN">0</span></div></div>
+        <div class="card"><h3>S015 JAFFURAH</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colJ">0</span></div></div>
+        <div class="card"><h3>S016 JAFFURAH</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colK">0</span></div></div>
+        <div class="card"><h3>S020 DAMMAM</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colI">0</span></div></div>
+        <div class="card"><h3>NMP JAFFURAH</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colO">0</span></div></div>
+        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colQ">0</span></div></div>
+        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colF">0</span></div></div>
+        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val-box"><span class="val-label">val</span><span class="val-num" id="colP">0</span></div></div>
     </div>
 
     <footer class="footer">
         Created and managed by <b>Mohammad Javed Shaikh</b><br>
-        Email: <b>materialcontroller.orcp@kga.group</b> | Contact: <b>+966 57 653 1369</b>
+        Email: <b>materialcontroller.orcp@kga.group</b><br>
+        Contact: <b>+966 57 653 1369</b>
     </footer>
 </div>
 
 <script>
     let masterData = [];
+    // EXACT FILENAME FROM YOUR GITHUB
     const FILE_NAME = '01. TOTAL MATERIAL YARD & PROJECTS.xlsm';
     const SHEET_NAME = 'SCAFFOLDING MATERIAL OVERALL';
 
     window.addEventListener('DOMContentLoaded', async () => {
         const statusEl = document.getElementById('status');
         try {
+            // Fetch the file with cache busting
             const fileUrl = encodeURIComponent(FILE_NAME) + '?v=' + Date.now();
             const res = await fetch(fileUrl);
-            if (!res.ok) throw new Error("File not found");
+            if (!res.ok) throw new Error("File not found on GitHub");
             
             const ab = await res.arrayBuffer();
             const wb = XLSX.read(new Uint8Array(ab), {type: 'array'});
             const ws = wb.Sheets[SHEET_NAME];
-            if (!ws) throw new Error("Sheet not found");
+            if (!ws) throw new Error("Sheet name is incorrect");
 
             const json = XLSX.utils.sheet_to_json(ws, {header: 1});
 
-            // Handle Merges
+            // Auto-fill merged cells for search
             const merges = ws['!merges'] || [];
             merges.forEach(m => {
                 if (m.s.c <= 2 && m.e.c >= 2) {
@@ -223,15 +243,17 @@
                 }
             });
 
+            // Filter out empty rows and start from row 7
             masterData = json.slice(6).map(row => {
                 if(row[2]) row[2] = row[2].toString().trim();
                 return row;
             }).filter(row => row[2]);
 
-            statusEl.innerText = "System Live: " + masterData.length + " Items Loaded";
+            statusEl.innerText = "● SYSTEM LIVE: " + masterData.length + " ITEMS READY";
             document.getElementById('searchInput').disabled = false;
         } catch (e) {
-            statusEl.innerText = "Error: " + e.message;
+            statusEl.innerText = "● ERROR: " + e.message;
+            statusEl.style.color = "#feb2b2";
         }
     });
 
@@ -251,15 +273,15 @@
             div.onclick = () => {
                 searchInput.value = row[2];
                 suggestions.style.display = 'none';
-                updateDashboard(row);
+                updateCards(row);
             };
             suggestions.appendChild(div);
         });
         suggestions.style.display = matches.length ? 'block' : 'none';
     };
 
-    function updateDashboard(row) {
-        // Corrected Mapping
+    function updateCards(row) {
+        // Correct Column Mapping for your Excel
         document.getElementById('colL').innerText = row[11] || "0";
         document.getElementById('colM').innerText = row[12] || "0";
         document.getElementById('colN').innerText = row[13] || "0";
@@ -271,6 +293,10 @@
         document.getElementById('colF').innerText = row[5] || "0";
         document.getElementById('colP').innerText = row[15] || "0";
     }
+
+    document.addEventListener('click', (e) => {
+        if (e.target !== searchInput) suggestions.style.display = 'none';
+    });
 </script>
 
 </body>
