@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ORCP SCAFFOLDING MATERIAL ACROSS KSA REGION </title>
+    <title>ORCP SCAFFOLDING MATERIAL DASHBOARD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -20,10 +20,10 @@
             color: #1e293b;
         }
 
-        /* Header with Single Logo */
+        /* Header Section */
         .header {
             background: linear-gradient(135deg, var(--primary-blue), #1e40af);
-            padding: 20px 40px;
+            padding: 25px 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,9 +34,9 @@
 
         .orcp-logo {
             background: white;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 8px;
-            height: 50px;
+            height: 60px;
             position: absolute;
             left: 40px;
             display: flex;
@@ -45,124 +45,156 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
+        .orcp-logo img { height: 100%; object-fit: contain; }
+
         .header h1 {
             margin: 0;
-            font-size: 22px;
+            font-size: 28px; /* Bigger Title Font */
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
 
-        /* Search Area */
+        /* Search Area - Suggestion box same size as search box */
         .search-container {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .search-label { 
+            font-weight: 700; 
+            font-size: 18px; /* Bigger Label */
+            margin-bottom: 12px; 
+            display: block; 
+            color: #475569;
         }
 
         .search-input {
             width: 100%;
-            padding: 15px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 20px 25px; /* Bigger Search Box Padding */
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 20px; /* Bigger Input Text */
             outline: none;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
+
+        .search-input:focus { border-color: var(--accent-blue); }
 
         .suggestions {
             position: absolute;
             background: white;
-            border: 1px solid var(--border-color);
-            width: calc(100% - 90px);
-            max-height: 200px;
+            border: 2px solid var(--accent-blue);
+            border-top: none;
+            /* Same width as search input taking padding into account */
+            width: calc(100% - 60px); 
+            max-height: 300px;
             overflow-y: auto;
-            z-index: 100;
+            z-index: 1000;
             display: none;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-radius: 0 0 10px 10px;
         }
 
-        .suggestions div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
-        .suggestions div:hover { background: #eff6ff; color: var(--primary-blue); font-weight: 600; }
+        .suggestions div { 
+            padding: 18px 25px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            border-bottom: 1px solid #f1f5f9; 
+        }
+        .suggestions div:hover { background: #eff6ff; color: var(--primary-blue); font-weight: 700; }
 
         /* SEPARATE SECTION: SCAFFOLDING YARD */
         .yard-section {
             background: #ffffff;
-            border: 2px solid var(--primary-blue);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
+            border: 3px solid var(--primary-blue);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
             display: flex;
             justify-content: center;
         }
 
         /* FRAMED SECTION: PROJECTS */
         .projects-frame {
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             background: white;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 45px 35px 35px;
+            border-radius: 20px;
             position: relative;
         }
 
         .frame-title {
             position: absolute;
-            top: -15px;
-            left: 30px;
+            top: -20px;
+            left: 40px;
             background: var(--primary-blue);
             color: white;
-            padding: 2px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
+            padding: 6px 30px;
+            border-radius: 30px;
+            font-size: 18px; /* Bigger Frame Title */
+            font-weight: 800;
             text-transform: uppercase;
         }
 
         /* Card Styling */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .card {
             background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #edf2f7;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
             transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .card:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
+        .card:hover { border-color: var(--accent-blue); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
 
-        .card h3 { margin: 0; font-size: 13px; color: #64748b; text-transform: uppercase; }
+        .card h3 { 
+            margin: 0; 
+            font-size: 16px; /* Bigger Card Title */
+            color: #64748b; 
+            text-transform: uppercase;
+            font-weight: 700;
+        }
 
         .val-display {
             display: flex;
             align-items: baseline;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 15px;
         }
 
-        .val-num { font-size: 28px; font-weight: 800; color: var(--primary-blue); }
-        .val-unit { font-size: 14px; color: #94a3b8; }
+        .val-num { font-size: 42px; font-weight: 900; color: var(--primary-blue); } /* Huge Numbers */
+        .val-unit { font-size: 18px; color: #94a3b8; font-weight: 600; }
 
-        /* Status & Footer */
-        #status { font-size: 12px; text-align: center; margin-top: 5px; color: #cbd5e1; }
-        
+        /* Footer Styling */
         .footer {
-            margin-top: 50px;
-            padding: 30px;
+            margin-top: 60px;
+            padding: 40px;
             text-align: center;
-            font-size: 13px;
-            color: #64748b;
-            border-top: 1px solid var(--border-color);
-            line-height: 1.8;
+            font-size: 16px; /* Bigger Footer Font */
+            color: #475569;
+            border-top: 2px solid var(--border-color);
+            line-height: 2;
         }
+        .footer b { color: var(--primary-blue); }
+
+        #status { font-size: 14px; text-align: center; margin-top: 8px; color: #cbd5e1; }
     </style>
 </head>
 <body>
@@ -173,19 +205,19 @@
     </div>
     <h1>Scaffolding Material Dashboard</h1>
 </header>
-<div id="status">🔄 Initializing...</div>
+<div id="status">🔄 System Loading...</div>
 
 <div class="container">
     <div class="search-container">
-        <label style="font-weight: 600; margin-bottom: 10px; display: block;">Item Search (Column C)</label>
-        <input type="text" id="searchInput" class="search-input" placeholder="Type item description..." disabled>
+        <label class="search-label">Item Search (Column C Description)</label>
+        <input type="text" id="searchInput" class="search-input" placeholder="Enter item description here..." disabled>
         <div id="suggestions" class="suggestions"></div>
     </div>
 
     <div class="yard-section">
-        <div class="card" style="width: 100%; max-width: 400px; border-top: 5px solid var(--primary-blue);">
-            <h3>SCAFFOLDING YARD - ORCP</h3>
-            <div class="val-display">
+        <div class="card" style="width: 100%; max-width: 500px; border-top: 8px solid var(--primary-blue); text-align: center;">
+            <h3 style="font-size: 20px; color: var(--primary-blue);">SCAFFOLDING YARD - ORCP</h3>
+            <div class="val-display" style="justify-content: center;">
                 <span class="val-num" id="colF">0</span>
                 <span class="val-unit">Qty</span>
             </div>
@@ -193,7 +225,7 @@
     </div>
 
     <div class="projects-frame">
-        <div class="frame-title">Project Locations & Rental</div>
+        <div class="frame-title">Project Locations & Rental Data</div>
         <div class="grid">
             <div class="card"><h3>S013 MARJAN</h3><div class="val-display"><span class="val-num" id="colL">0</span></div></div>
             <div class="card"><h3>S022 FADHALI</h3><div class="val-display"><span class="val-num" id="colM">0</span></div></div>
@@ -209,7 +241,8 @@
 
     <footer class="footer">
         Created and managed by <b>Mohammad Javed Shaikh</b><br>
-        Email: <b>materialcontroller.orcp@kga.group</b> | Contact: <b>+966 57 653 1369</b>
+        Email: <b>materialcontroller.orcp@kga.group</b><br>
+        Contact: <b>+966 57 653 1369</b>
     </footer>
 </div>
 
@@ -223,16 +256,16 @@
         try {
             const fileUrl = encodeURIComponent(FILE_NAME) + '?v=' + Date.now();
             const res = await fetch(fileUrl);
-            if (!res.ok) throw new Error("Database not found.");
+            if (!res.ok) throw new Error("Database file connection failed.");
             
             const ab = await res.arrayBuffer();
             const wb = XLSX.read(new Uint8Array(ab), {type: 'array'});
             const ws = wb.Sheets[SHEET_NAME];
-            if (!ws) throw new Error("Sheet not found.");
+            if (!ws) throw new Error("Excel worksheet not found.");
 
             const json = XLSX.utils.sheet_to_json(ws, {header: 1});
 
-            // Handle Merged Cells
+            // Handle Merged Item Descriptions in Column C
             const merges = ws['!merges'] || [];
             merges.forEach(m => {
                 if (m.s.c <= 2 && m.e.c >= 2) {
@@ -246,10 +279,10 @@
                 return row;
             }).filter(row => row[2]);
 
-            statusEl.innerText = "● LIVE SYNC ACTIVE: " + masterData.length + " ITEMS";
+            statusEl.innerText = "● LIVE SYNC ACTIVE: " + masterData.length + " ITEMS LOADED";
             document.getElementById('searchInput').disabled = false;
         } catch (e) {
-            statusEl.innerText = "● OFFLINE: " + e.message;
+            statusEl.innerText = "● CONNECTION ERROR: " + e.message;
         }
     });
 
@@ -263,20 +296,21 @@
 
         const matches = masterData.filter(r => r[2] && r[2].toLowerCase().includes(query));
         
-        matches.slice(0, 10).forEach(row => {
+        matches.slice(0, 15).forEach(row => {
             const div = document.createElement('div');
             div.textContent = row[2];
             div.onclick = () => {
                 searchInput.value = row[2];
                 suggestions.style.display = 'none';
-                updateUI(row);
+                updateDisplay(row);
             };
             suggestions.appendChild(div);
         });
         suggestions.style.display = matches.length ? 'block' : 'none';
     };
 
-    function updateUI(row) {
+    function updateDisplay(row) {
+        // Mapping based on your provided column structure
         document.getElementById('colL').innerText = row[11] || "0";
         document.getElementById('colM').innerText = row[12] || "0";
         document.getElementById('colN').innerText = row[13] || "0";
@@ -288,8 +322,11 @@
         document.getElementById('colF').innerText = row[5] || "0";
         document.getElementById('colP').innerText = row[15] || "0";
     }
+
+    document.addEventListener('click', (e) => {
+        if (e.target !== searchInput) suggestions.style.display = 'none';
+    });
 </script>
 
 </body>
 </html>
-
