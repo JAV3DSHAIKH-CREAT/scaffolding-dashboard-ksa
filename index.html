@@ -7,223 +7,193 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary-dark: #002b5c;
-            --nbtc-blue: #0d47a1;
-            --accent-gold: #ffb300;
-            --bg-gray: #f0f2f5;
-            --white: #ffffff;
-            --text-dark: #333333;
+            --primary-blue: #1a438d;
+            --secondary-blue: #0d47a1;
+            --light-bg: #f4f7f9;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --text-main: #333;
         }
 
         body { 
             margin: 0; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-gray); 
-            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--light-bg);
+            color: var(--text-main);
         }
 
-        /* Header Section */
-        .header {
-            background: linear-gradient(to right, var(--primary-dark), var(--nbtc-blue));
-            padding: 20px 40px;
+        /* Top Blue Header */
+        .main-header {
+            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            padding: 15px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 15px 15px;
+            margin: 0 10px;
         }
 
-        .logo-placeholder {
-            width: 120px;
-            height: 60px;
-            background: rgba(255,255,255,0.1);
+        .logo-box {
+            background: white;
+            padding: 10px;
             border-radius: 8px;
+            width: 100px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            border: 1px dashed rgba(255,255,255,0.5);
-            overflow: hidden;
+            font-weight: bold;
+            color: #1a438d;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
 
-        .logo-placeholder img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .header-text {
+            text-align: center;
+            flex-grow: 1;
         }
 
-        .header-titles h1 {
+        .header-text h1 {
             margin: 0;
-            font-size: 24px;
-            letter-spacing: 1px;
+            font-size: 22px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .status-badge {
-            font-size: 12px;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-top: 8px;
-            display: inline-block;
+        /* Search Area */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
         }
 
-        /* Search Section */
-        .container { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
-
-        .search-wrapper {
-            position: relative;
-            max-width: 800px;
-            margin: -70px auto 40px;
-        }
+        .search-section label { font-weight: 600; display: block; margin-bottom: 8px; color: #555; }
 
         .search-input {
             width: 100%;
-            padding: 22px 30px;
-            font-size: 18px;
-            border-radius: 50px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
             outline: none;
-            transition: 0.3s;
+            box-sizing: border-box;
         }
 
-        .search-input:focus {
-            box-shadow: 0 10px 30px rgba(13, 71, 161, 0.2);
-        }
+        .search-input:focus { border-color: var(--secondary-blue); box-shadow: 0 0 8px rgba(13,71,161,0.2); }
 
         .suggestions {
-            position: absolute;
-            top: 100%;
-            left: 20px;
-            right: 20px;
             background: white;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-height: 300px;
+            border: 1px solid #ddd;
+            border-top: none;
+            max-height: 200px;
             overflow-y: auto;
             display: none;
-            z-index: 1000;
+            position: absolute;
+            width: calc(100% - 80px);
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .suggestions div {
-            padding: 15px 25px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            transition: 0.2s;
-        }
+        .suggestions div { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .suggestions div:hover { background: #f0f7ff; color: var(--secondary-blue); font-weight: 600; }
 
-        .suggestions div:hover {
-            background: #f8f9fa;
-            color: var(--nbtc-blue);
-            padding-left: 35px;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
+        /* Grid Cards */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         }
 
         .card {
-            background: var(--white);
-            border-radius: 16px;
+            background: white;
             padding: 25px 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border-bottom: 4px solid #ddd;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border-top: 5px solid transparent;
             transition: all 0.3s ease;
+            text-align: left;
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-            border-bottom: 4px solid var(--nbtc-blue);
+            transform: translateY(-5px);
+            border-top: 5px solid var(--secondary-blue);
         }
 
         .card h3 {
             margin: 0;
-            font-size: 13px;
+            font-size: 14px;
             color: #666;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 10px;
         }
 
-        .card .val {
-            margin-top: 15px;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-dark);
+        .card .val-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
         }
+
+        .card .val-label { font-size: 16px; color: #999; }
+        .card .val { font-size: 32px; font-weight: 800; color: #1e3a8a; }
 
         /* Footer */
         .footer {
-            margin-top: 60px;
-            background: var(--white);
-            padding: 30px;
+            background: #eef2f7;
+            padding: 25px;
             text-align: center;
-            border-top: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #555;
             line-height: 1.6;
+            border: 1px solid #dee2e6;
         }
 
-        .footer b { color: var(--nbtc-blue); }
-        .footer-info { font-size: 14px; color: #555; }
-
-        @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 20px; text-align: center; }
-            .header-titles h1 { font-size: 18px; }
-        }
+        #status { font-size: 12px; margin-top: 5px; color: #d1d5db; }
     </style>
 </head>
 <body>
 
-<header class="header">
-    <div class="logo-placeholder">
-        <img src="left-logo.png" alt="Company Logo">
-    </div>
+<header class="main-header">
+    <div class="logo-box">ORCP</div>
     
-    <div class="header-titles">
+    <div class="header-text">
         <h1>Scaffolding Material Across KSA Region</h1>
-        <div id="status" class="status-badge">🔄 Initializing System...</div>
+        <div id="status">Connecting to Database...</div>
     </div>
 
-    <div class="logo-placeholder">
-        <img src="nbtc-logo.png" alt="NBTC Logo">
-    </div>
+    <div class="logo-box">NBTC</div>
 </header>
 
 <div class="container">
-    <div class="search-wrapper">
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search Item Description (Column C)..." disabled>
+    <div class="search-section">
+        <label>Search Item (Column C)</label>
+        <input type="text" id="searchInput" class="search-input" placeholder="Start typing item description..." disabled>
         <div id="suggestions" class="suggestions"></div>
     </div>
 
-    <div class="dashboard-grid">
-        <div class="card"><h3>S013 MARJAN</h3><div class="val" id="colL">0</div></div>
-        <div class="card"><h3>S022 FADHALI</h3><div class="val" id="colM">0</div></div>
-        <div class="card"><h3>S012 EPC</h3><div class="val" id="colN">0</div></div>
-        <div class="card"><h3>S015 JAFFURAH</h3><div class="val" id="colJ">0</div></div>
-        <div class="card"><h3>S016 JAFFURAH</h3><div class="val" id="colK">0</div></div>
-        <div class="card"><h3>S020 DAMMAM</h3><div class="val" id="colI">0</div></div>
-        <div class="card"><h3>NMP JAFFURAH</h3><div class="val" id="colO">0</div></div>
-        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val" id="colQ">0</div></div>
-        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val" id="colF">0</div></div>
-        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val" id="colP">0</div></div>
+    <div class="grid">
+        <div class="card"><h3>S013 MARJAN</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colL">0</span></div></div>
+        <div class="card"><h3>S022 FADHALI</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colM">0</span></div></div>
+        <div class="card"><h3>S012 EPC</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colN">0</span></div></div>
+        <div class="card"><h3>S015 JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colJ">0</span></div></div>
+        <div class="card"><h3>S016 JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colK">0</span></div></div>
+        <div class="card"><h3>S020 DAMMAM</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colI">0</span></div></div>
+        <div class="card"><h3>NMP JAFFURAH</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colO">0</span></div></div>
+        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colQ">0</span></div></div>
+        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colF">0</span></div></div>
+        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val-row"><span class="val-label">val</span><span class="val" id="colP">0</span></div></div>
     </div>
-</div>
 
-<footer class="footer">
-    <div class="footer-info">
-        Created and Managed by <b>Mohammad Javed Shaikh</b><br>
-        📧 Email: <a href="mailto:materialcontroller.orcp@kga.group">materialcontroller.orcp@kga.group</a> | 
-        📞 Contact: <b>+966 57 653 1369</b>
-    </div>
-</footer>
+    <footer class="footer">
+        Created and managed by <b>Mohammad Javed Shaikh</b><br>
+        Email: <b>materialcontroller.orcp@kga.group</b> | Contact: <b>+966 57 653 1369</b>
+    </footer>
+</div>
 
 <script>
     let masterData = [];
@@ -235,16 +205,16 @@
         try {
             const fileUrl = encodeURIComponent(FILE_NAME) + '?v=' + Date.now();
             const res = await fetch(fileUrl);
-            if (!res.ok) throw new Error("Database file connection failed.");
+            if (!res.ok) throw new Error("File not found");
             
             const ab = await res.arrayBuffer();
             const wb = XLSX.read(new Uint8Array(ab), {type: 'array'});
             const ws = wb.Sheets[SHEET_NAME];
-            if (!ws) throw new Error("Worksheet not found.");
+            if (!ws) throw new Error("Sheet not found");
 
             const json = XLSX.utils.sheet_to_json(ws, {header: 1});
 
-            // Handle Merged Cells
+            // Handle Merges
             const merges = ws['!merges'] || [];
             merges.forEach(m => {
                 if (m.s.c <= 2 && m.e.c >= 2) {
@@ -258,11 +228,10 @@
                 return row;
             }).filter(row => row[2]);
 
-            statusEl.innerText = "✅ System Online: " + masterData.length + " Items Synced";
+            statusEl.innerText = "System Live: " + masterData.length + " Items Loaded";
             document.getElementById('searchInput').disabled = false;
         } catch (e) {
-            statusEl.innerText = "⚠️ System Offline: " + e.message;
-            statusEl.style.background = "#d32f2f";
+            statusEl.innerText = "Error: " + e.message;
         }
     });
 
@@ -282,24 +251,26 @@
             div.onclick = () => {
                 searchInput.value = row[2];
                 suggestions.style.display = 'none';
-                fillDashboard(row);
+                updateDashboard(row);
             };
             suggestions.appendChild(div);
         });
         suggestions.style.display = matches.length ? 'block' : 'none';
     };
 
-    function fillDashboard(row) {
-        const ids = {colL:11, colM:12, colN:13, colJ:9, colK:10, colI:8, colO:14, colQ:16, colF:5, colP:15};
-        for (let [id, index] of Object.entries(ids)) {
-            const val = row[index];
-            document.getElementById(id).innerText = (val !== undefined && val !== null) ? val : "0";
-        }
+    function updateDashboard(row) {
+        // Corrected Mapping
+        document.getElementById('colL').innerText = row[11] || "0";
+        document.getElementById('colM').innerText = row[12] || "0";
+        document.getElementById('colN').innerText = row[13] || "0";
+        document.getElementById('colJ').innerText = row[9] || "0";
+        document.getElementById('colK').innerText = row[10] || "0";
+        document.getElementById('colI').innerText = row[8] || "0";
+        document.getElementById('colO').innerText = row[14] || "0";
+        document.getElementById('colQ').innerText = row[16] || "0";
+        document.getElementById('colF').innerText = row[5] || "0";
+        document.getElementById('colP').innerText = row[15] || "0";
     }
-
-    document.addEventListener('click', (e) => {
-        if (e.target !== searchInput) suggestions.style.display = 'none';
-    });
 </script>
 
 </body>
