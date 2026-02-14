@@ -7,128 +7,262 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary: #0d47a1;
-            --accent: #1565c0;
-            --bg: #f4f7fc;
+            --primary-dark: #002b5c;
+            --nbtc-blue: #0d47a1;
+            --accent-gold: #ffb300;
+            --bg-gray: #f0f2f5;
+            --white: #ffffff;
+            --text-dark: #333333;
         }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); }
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg-gray); 
+            color: var(--text-dark);
+        }
 
+        /* Header Section */
         .header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; padding: 40px 20px; text-align: center;
+            background: linear-gradient(to right, var(--primary-dark), var(--nbtc-blue));
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .container { max-width: 1200px; margin: -30px auto 50px; padding: 0 20px; }
+        .logo-placeholder {
+            width: 120px;
+            height: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 1px dashed rgba(255,255,255,0.5);
+            overflow: hidden;
+        }
+
+        .logo-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .header-titles h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+            display: inline-block;
+        }
 
         /* Search Section */
-        .search-area { position: relative; max-width: 750px; margin: 0 auto; }
-        
+        .container { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: -70px auto 40px;
+        }
+
         .search-input {
-            width: 100%; padding: 20px 25px; font-size: 18px; border-radius: 15px;
-            border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); outline: none; box-sizing: border-box;
+            width: 100%;
+            padding: 22px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 10px 30px rgba(13, 71, 161, 0.2);
         }
 
         .suggestions {
-            position: absolute; top: 100%; left: 0; right: 0; background: white;
-            border-radius: 0 0 15px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            max-height: 280px; overflow-y: auto; display: none; z-index: 1000;
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
         }
 
-        .suggestions div { padding: 15px 25px; cursor: pointer; border-bottom: 1px solid #eee; }
-        .suggestions div:hover { background: #e3f2fd; color: var(--primary); font-weight: bold; }
+        .suggestions div {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.2s;
+        }
+
+        .suggestions div:hover {
+            background: #f8f9fa;
+            color: var(--nbtc-blue);
+            padding-left: 35px;
+        }
 
         /* Dashboard Grid */
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px; margin-top: 40px;
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
         }
 
         .card {
-            background: white; padding: 30px 20px; border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center;
-            border-top: 5px solid var(--primary); transition: 0.3s;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border-bottom: 4px solid #ddd;
+            transition: all 0.3s ease;
         }
 
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .card h3 { margin: 0; font-size: 14px; color: #777; letter-spacing: 1px; }
-        .card .val { margin-top: 15px; font-size: 28px; font-weight: 800; color: var(--primary); }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+            border-bottom: 4px solid var(--nbtc-blue);
+        }
 
-        .status-box { font-size: 13px; margin-top: 15px; color: rgba(255,255,255,0.8); }
+        .card h3 {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card .val {
+            margin-top: 15px;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            background: var(--white);
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .footer b { color: var(--nbtc-blue); }
+        .footer-info { font-size: 14px; color: #555; }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 20px; text-align: center; }
+            .header-titles h1 { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>SCAFFOLDING MATERIAL DASHBOARD</h1>
-    <div id="status" class="status-box">Connecting to SharePoint Data...</div>
-</div>
+<header class="header">
+    <div class="logo-placeholder">
+        <img src="left-logo.png" alt="Company Logo">
+    </div>
+    
+    <div class="header-titles">
+        <h1>Scaffolding Material Across KSA Region</h1>
+        <div id="status" class="status-badge">🔄 Initializing System...</div>
+    </div>
+
+    <div class="logo-placeholder">
+        <img src="nbtc-logo.png" alt="NBTC Logo">
+    </div>
+</header>
 
 <div class="container">
-    <div class="search-area">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search Item (Column C)..." disabled>
+    <div class="search-wrapper">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search Item Description (Column C)..." disabled>
         <div id="suggestions" class="suggestions"></div>
     </div>
-   <div class="dashboard">
-        <div class="card"><h3>S013 MARJAN</h3><div class="val" id="colL">-</div></div>
-        <div class="card"><h3>S022 FADHALI</h3><div class="val" id="colM">-</div></div>
-        <div class="card"><h3>S012 EPC</h3><div class="val" id="colN">-</div></div>
-        <div class="card"><h3>S015 JAFFURAH</h3><div class="val" id="colJ">-</div></div>
-        <div class="card"><h3>S016 JAFFURAH</h3><div class="val" id="colK">-</div></div>
-        <div class="card"><h3>S020 DAMMAM</h3><div class="val" id="colI">-</div></div>
-        <div class="card"><h3>NMP JAFFURAH</h3><div class="val" id="colO">-</div></div>
-        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val" id="colQ">-</div></div>
-        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val" id="colF">-</div></div>
-        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val" id="colP">-</div></div>
 
+    <div class="dashboard-grid">
+        <div class="card"><h3>S013 MARJAN</h3><div class="val" id="colL">0</div></div>
+        <div class="card"><h3>S022 FADHALI</h3><div class="val" id="colM">0</div></div>
+        <div class="card"><h3>S012 EPC</h3><div class="val" id="colN">0</div></div>
+        <div class="card"><h3>S015 JAFFURAH</h3><div class="val" id="colJ">0</div></div>
+        <div class="card"><h3>S016 JAFFURAH</h3><div class="val" id="colK">0</div></div>
+        <div class="card"><h3>S020 DAMMAM</h3><div class="val" id="colI">0</div></div>
+        <div class="card"><h3>NMP JAFFURAH</h3><div class="val" id="colO">0</div></div>
+        <div class="card"><h3>ABU DHABI - UAE</h3><div class="val" id="colQ">0</div></div>
+        <div class="card"><h3>SCAFFOLDING YARD - ORCP</h3><div class="val" id="colF">0</div></div>
+        <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val" id="colP">0</div></div>
     </div>
 </div>
+
+<footer class="footer">
+    <div class="footer-info">
+        Created and Managed by <b>Mohammad Javed Shaikh</b><br>
+        📧 Email: <a href="mailto:materialcontroller.orcp@kga.group">materialcontroller.orcp@kga.group</a> | 
+        📞 Contact: <b>+966 57 653 1369</b>
+    </div>
+</footer>
 
 <script>
     let masterData = [];
-    // EXACT NAMES:
     const FILE_NAME = '01. TOTAL MATERIAL YARD & PROJECTS.xlsm';
     const SHEET_NAME = 'SCAFFOLDING MATERIAL OVERALL';
 
     window.addEventListener('DOMContentLoaded', async () => {
         const statusEl = document.getElementById('status');
         try {
-            // Encode the name properly for the URL
             const fileUrl = encodeURIComponent(FILE_NAME) + '?v=' + Date.now();
             const res = await fetch(fileUrl);
-            
-            if (!res.ok) throw new Error("File not found on GitHub. Please check the filename.");
+            if (!res.ok) throw new Error("Database file connection failed.");
             
             const ab = await res.arrayBuffer();
             const wb = XLSX.read(new Uint8Array(ab), {type: 'array'});
             const ws = wb.Sheets[SHEET_NAME];
-            
-            if (!ws) throw new Error(`Sheet "${SHEET_NAME}" not found in the file.`);
+            if (!ws) throw new Error("Worksheet not found.");
 
             const json = XLSX.utils.sheet_to_json(ws, {header: 1});
 
-            // Handle Merged Cells in Column C
+            // Handle Merged Cells
             const merges = ws['!merges'] || [];
             merges.forEach(m => {
                 if (m.s.c <= 2 && m.e.c >= 2) {
                     const val = json[m.s.r][2];
-                    for (let r = m.s.r; r <= m.e.r; r++) {
-                        if (json[r]) json[r][2] = val;
-                    }
+                    for (let r = m.s.r; r <= m.e.r; r++) { if (json[r]) json[r][2] = val; }
                 }
             });
 
-            // Data starts Row 7 (Index 6)
             masterData = json.slice(6).map(row => {
                 if(row[2]) row[2] = row[2].toString().trim();
                 return row;
             }).filter(row => row[2]);
 
-            statusEl.innerText = "✅ LIVE SYNC: " + masterData.length + " Items Loaded";
+            statusEl.innerText = "✅ System Online: " + masterData.length + " Items Synced";
             document.getElementById('searchInput').disabled = false;
         } catch (e) {
-            statusEl.innerText = "❌ Error: " + e.message;
-            statusEl.style.color = "#ffcdd2";
+            statusEl.innerText = "⚠️ System Offline: " + e.message;
+            statusEl.style.background = "#d32f2f";
         }
     });
 
@@ -142,7 +276,7 @@
 
         const matches = masterData.filter(r => r[2] && r[2].toLowerCase().includes(query));
         
-        matches.slice(0, 15).forEach(row => {
+        matches.slice(0, 10).forEach(row => {
             const div = document.createElement('div');
             div.textContent = row[2];
             div.onclick = () => {
@@ -156,17 +290,11 @@
     };
 
     function fillDashboard(row) {
-        // Mapping: L=11, M=12, N=13, J=9, K=10, I=8, O=14, Q=16, F=5, P=15
-        document.getElementById('colL').innerText = row[11] || "0";
-        document.getElementById('colM').innerText = row[12] || "0";
-        document.getElementById('colN').innerText = row[13] || "0";
-        document.getElementById('colJ').innerText = row[9] || "0";
-        document.getElementById('colK').innerText = row[10] || "0";
-        document.getElementById('colI').innerText = row[8] || "0";
-        document.getElementById('colO').innerText = row[14] || "0";
-        document.getElementById('colQ').innerText = row[16] || "0";
-        document.getElementById('colF').innerText = row[5] || "0";
-        document.getElementById('colP').innerText = row[15] || "0";
+        const ids = {colL:11, colM:12, colN:13, colJ:9, colK:10, colI:8, colO:14, colQ:16, colF:5, colP:15};
+        for (let [id, index] of Object.entries(ids)) {
+            const val = row[index];
+            document.getElementById(id).innerText = (val !== undefined && val !== null) ? val : "0";
+        }
     }
 
     document.addEventListener('click', (e) => {
