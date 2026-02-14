@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SCAFFOLDING LIVE DASHBOARD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+    body { margin:0; font-family:'Segoe UI', sans-serif; background:#f4f7fc; }
+    .header { background:linear-gradient(135deg,#0d47a1,#1565c0); color:white; padding:20px; text-align:center; font-size:22px; font-weight:bold; }
+    .container { max-width:1300px; margin:auto; padding:20px; }
+    
+    .status-bar { background:#fff; padding:10px; border-radius:8px; margin-bottom:20px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.05); color:#666; font-weight:bold; }
+    
+    .search-box { width:100%; padding:15px; font-size:16px; border-radius:10px; border:2px solid #ddd; outline:none; box-sizing:border-box; }
+    .suggestions { position:absolute; width:100%; background:white; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); max-height:250px; overflow-y:auto; z-index:1000; }
+    .suggestions div { padding:12px; cursor:pointer; border-bottom:1px solid #eee; }
+    .suggestions div:hover { background:#e3f2fd; }
+
+    .dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:20px; }
+    .card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.05); text-align:center; border-top:4px solid #1565c0; }
+    .card h3 { margin:0; font-size:13px; color:#1565c0; }
+    .card p { margin:10px 0 0; font-size:20px; font-weight:bold; }
+</style>
+</head>
+<body>
+
+<div class="header">SCAFFOLDING MATERIAL LIVE DASHBOARD</div>
+
+<div class="container">
+    <div id="status" class="status-bar">Syncing with Excel File...</div>
+    
+    <div style="position:relative;">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search Item (e.g. DOKA, BEAM)..." disabled>
+        <div id="suggestions" class="suggestions" style="display:none;"></div>
+    </div>
+
+    <div class="dashboard">
+        <div class="card"><h3>S013</h3><p id="colL">-</p></div>
+        <div class="card"><h3>S022</h3><p id="colM">-</p></div>
+        <div class="card"><h3>S012</h3><p id="colN">-</p></div>
+        <div class="card"><h3>S015</h3><p id="colJ">-</p></div>
+        <div class="card"><h3>S016</h3><p id="colK">-</p></div>
+        <div class="card"><h3>S020</h3><p id="colI">-</p></div>
+        <div class="card"><h3>NMP</h3><p id="colO">-</p></div>
+        <div class="card"><h3>AUH</h3><p id="colQ">-</p></div>
+        <div class="card"><h3>YARD</h3><p id="colF">-</p></div>
+        <div class="card"><h3>HDEC - RENT</h3><p id="colP">-</p></div>
+    </div>
+</div>
+
+<script>
+let excelData = [];
+const FILE_NAME = 'data.xlsx'; // Make sure your file on GitHub is named this
+
+// AUTOMATIC LOAD ON PAGE OPEN
+window.onload = async function() {
+    const status = document.getElementById('status');
+    try {
+        const response = await fetch(FILE_NAME + '?nocache=' + new Date().getTime());
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, {type: 'array'});
+        
+        const sheetName = "SCAFFOLDING MATERIAL OVERALL";
+        const sheet = workbook.Sheets[sheetName];
+        
+        if(!sheet) throw new Error("Sheet '" + sheetName + "' not found");
+
+        const raw = XLSX.utils.sheet_to_json(sheet, {header: 1});
+        const merges = sheet['!merges'] || [];
+
+        // Fix Merged Cells
+        merges.forEach(m => {
+            if (m.s.c <= 2 && m.e.c >= 2) {
+                const val = raw[m.s.r][2];
+                for (let r = m.s.r; r <= m.e.r; r++) {
+                    if (raw[r]) raw[r][2] = val;
+                }
+            }
+        });
+
+        // Clean and Load Data (Row 7+)
+        excelData = raw.slice(6).map(row => {
+            if(row[2]) row[2] = row[2].toString().trim();
+            return row;
+        }).filter(row => row[2]);
+
+        status.innerHTML = "✅ Database Live: " + excelData.length + " Items Loaded";
+        document.getElementById('searchInput').disabled = false;
+
+    } catch (err) {
+        status.innerHTML = "❌ Error: " + err.message;
+        console.error(err);
+    }
+};
+
+// Search and Display Logic
+const searchInput = document.getElementById('searchInput');
+const suggestions = document.getElementById('suggestions');
+
+searchInput.oninput = function() {
+    const val = this.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if(!val) { suggestions.style.display = "none"; return; }
+
+    const matches = excelData.filter(r => r[2] && r[2].toLowerCase().includes(val));
+    matches.slice(0, 15).forEach(row => {
+        const div = document.createElement('div');
+        div.textContent = row[2];
+        div.onclick = () => {
+            searchInput.value = row[2];
+            suggestions.style.display = "none";
+            fillDashboard(row);
+        };
+        suggestions.appendChild(div);
+    });
+    suggestions.style.display = matches.length ? "block" : "none";
+};
+
+function fillDashboard(row) {
+    const ids = ["colL", "colM", "colN", "colJ", "colK", "colI", "colO", "colQ", "colF", "colP"];
+    const indices = [11, 12, 13, 9, 10, 8, 14, 16, 5, 15];
+    ids.forEach((id, i) => {
+        document.getElementById(id).innerText = row[indices[i]] || "0";
+    });
+}
+</script>
+</body>
+</html>
