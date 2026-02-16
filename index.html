@@ -2,334 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ORCP SCAFFOLDING MATERIAL DASHBOARD ACROSS KSA REGION</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUV Training Monitor | Professional Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-blue: #1e3a8a;
-            --accent-blue: #3b82f6;
-            --bg-gray: #f8fafc;
-            --border-color: #e2e8f0;
-        }
-
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            background: var(--bg-gray); 
-            color: #1e293b;
-        }
-
-        /* Header Section */
-        .header {
-            background: linear-gradient(135deg, var(--primary-blue), #1e40af);
-            padding: 25px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        .orcp-logo {
-            background: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            height: 60px;
-            position: absolute;
-            left: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .orcp-logo img { height: 100%; object-fit: contain; }
-
-        .header h1 {
-            margin: 0;
-            font-size: 28px; /* Bigger Title Font */
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
-
-        /* Search Area - Suggestion box same size as search box */
-        .search-container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            margin-bottom: 35px;
-            position: relative;
-        }
-
-        .search-label { 
-            font-weight: 700; 
-            font-size: 18px; /* Bigger Label */
-            margin-bottom: 12px; 
-            display: block; 
-            color: #475569;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 20px 25px; /* Bigger Search Box Padding */
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 20px; /* Bigger Input Text */
-            outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        .search-input:focus { border-color: var(--accent-blue); }
-
-        .suggestions {
-            position: absolute;
-            background: white;
-            border: 2px solid var(--accent-blue);
-            border-top: none;
-            /* Same width as search input taking padding into account */
-            width: calc(100% - 60px); 
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            border-radius: 0 0 10px 10px;
-        }
-
-        .suggestions div { 
-            padding: 18px 25px; 
-            font-size: 18px; 
-            cursor: pointer; 
-            border-bottom: 1px solid #f1f5f9; 
-        }
-        .suggestions div:hover { background: #eff6ff; color: var(--primary-blue); font-weight: 700; }
-
-        /* SEPARATE SECTION: SCAFFOLDING YARD */
-        .yard-section {
-            background: #ffffff;
-            border: 3px solid var(--primary-blue);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* FRAMED SECTION: PROJECTS */
-        .projects-frame {
-            border: 2px solid var(--border-color);
-            background: white;
-            padding: 45px 35px 35px;
-            border-radius: 20px;
-            position: relative;
-        }
-
-        .frame-title {
-            position: absolute;
-            top: -20px;
-            left: 40px;
-            background: var(--primary-blue);
-            color: white;
-            padding: 6px 30px;
-            border-radius: 30px;
-            font-size: 18px; /* Bigger Frame Title */
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        /* Card Styling */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .card:hover { border-color: var(--accent-blue); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-
-        .card h3 { 
-            margin: 0; 
-            font-size: 16px; /* Bigger Card Title */
-            color: #64748b; 
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .val-display {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        .val-num { font-size: 42px; font-weight: 900; color: var(--primary-blue); } /* Huge Numbers */
-        .val-unit { font-size: 18px; color: #94a3b8; font-weight: 600; }
-
-        /* Footer Styling */
-        .footer {
-            margin-top: 60px;
-            padding: 40px;
-            text-align: center;
-            font-size: 16px; /* Bigger Footer Font */
-            color: #475569;
-            border-top: 2px solid var(--border-color);
-            line-height: 2;
-        }
-        .footer b { color: var(--primary-blue); }
-
-        #status { font-size: 14px; text-align: center; margin-top: 8px; color: #cbd5e1; }
+        .rounded-card { border-radius: 1.25rem; }
+        .soft-shadow { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+        .navy-gradient { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-10">
 
-<header class="header">
-    <div class="orcp-logo">
-        <img src="orcp.bmp" alt="ORCP LOGO" onerror="this.parentElement.innerText='ORCP'">
-    </div>
-    <h1>ORCP SCAFFOLDING MATERIAL DASHBOARD ACROSS KSA REGION</h1>
-</header>
-<div id="status">🔄 System Loading...</div>
-
-<div class="container">
-    <div class="search-container">
-        <label class="search-label">Material Search Here</label>
-        <input type="text" id="searchInput" class="search-input" placeholder="Enter item description here..." disabled>
-        <div id="suggestions" class="suggestions"></div>
+    <div class="max-w-6xl mx-auto flex gap-4 mb-8">
+        <button onclick="togglePage(1)" id="tab1" class="px-8 py-3 navy-gradient text-white rounded-full font-bold soft-shadow transition-all hover:scale-105">
+            <i class="fa fa-chart-pie mr-2"></i> Dashboard
+        </button>
+        <button onclick="togglePage(2)" id="tab2" class="px-8 py-3 bg-white text-slate-600 rounded-full font-bold soft-shadow border border-gray-100 hover:bg-gray-50">
+            <i class="fa fa-list mr-2"></i> Full Data Log
+        </button>
     </div>
 
-    <div class="yard-section">
-        <div class="card" style="width: 100%; max-width: 500px; border-top: 8px solid var(--primary-blue); text-align: center;">
-            <h3 style="font-size: 20px; color: var(--primary-blue);">SCAFFOLDING YARD - ORCP</h3>
-            <div class="val-display" style="justify-content: center;">
-                <span class="val-num" id="colF">0</span>
-                <span class="val-unit">Qty</span>
+    <div id="page1" class="max-w-6xl mx-auto">
+        <div class="mb-12 relative">
+            <div class="relative flex items-center">
+                <i class="fa fa-search absolute left-6 text-slate-400 text-xl"></i>
+                <input type="text" id="searchInput" oninput="liveSearch()" placeholder="Search Name or Employee ID..." 
+                    class="w-full pl-16 pr-6 py-5 rounded-2xl border-none soft-shadow text-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div id="suggestions" class="absolute w-full mt-2 bg-white rounded-2xl shadow-2xl z-50 hidden max-h-60 overflow-y-auto border border-gray-100"></div>
+        </div>
+
+        <div id="dashboardContent" class="hidden animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cardGrid">
+                </div>
+        </div>
+    </div>
+
+    <div id="page2" class="max-w-7xl mx-auto hidden">
+        <div class="bg-white rounded-3xl soft-shadow overflow-hidden border border-gray-100">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left" id="dataTable">
+                    <thead class="navy-gradient text-white">
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="tableBody" class="text-slate-600 divide-y divide-gray-100"></tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div class="projects-frame">
-        <div class="frame-title">Project Locations</div>
-        <div class="grid">
-            <div class="card"><h3>S013 MARJAN</h3><div class="val-display"><span class="val-num" id="colL">0</span></div></div>
-            <div class="card"><h3>S022 FADHALI</h3><div class="val-display"><span class="val-num" id="colM">0</span></div></div>
-            <div class="card"><h3>S012 EPC</h3><div class="val-display"><span class="val-num" id="colN">0</span></div></div>
-            <div class="card"><h3>S015 JAFFURAH</h3><div class="val-display"><span class="val-num" id="colJ">0</span></div></div>
-            <div class="card"><h3>S016 JAFFURAH</h3><div class="val-display"><span class="val-num" id="colK">0</span></div></div>
-            <div class="card"><h3>S020 DAMMAM</h3><div class="val-display"><span class="val-num" id="colI">0</span></div></div>
-            <div class="card"><h3>NMP JAFFURAH</h3><div class="val-display"><span class="val-num" id="colO">0</span></div></div>
-            <div class="card"><h3>ABU DHABI - UAE</h3><div class="val-display"><span class="val-num" id="colQ">0</span></div></div>
-            <div class="card"><h3>RENTAL MATERIAL - HDEC</h3><div class="val-display"><span class="val-num" id="colP">0</span></div></div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        Created and managed by <b>Mohammad Javed Shaikh</b><br>
-        Email: <b>materialcontroller.orcp@kga.group</b><br>
-        Contact: <b>+966 57 653 1369</b>
+    <footer class="max-w-6xl mx-auto mt-16 py-8 border-t border-gray-200 text-center text-slate-400 font-medium">
+        Designed & Developed by <span class="text-slate-800 font-bold">Mohammad Javed Shaikh</span>
     </footer>
-</div>
 
-<script>
-    let masterData = [];
-    const FILE_NAME = '01. TOTAL MATERIAL YARD & PROJECTS.xlsm';
-    const SHEET_NAME = 'SCAFFOLDING MATERIAL OVERALL';
+    <script>
+        let fullData = [];
 
-    window.addEventListener('DOMContentLoaded', async () => {
-        const statusEl = document.getElementById('status');
-        try {
-            const fileUrl = encodeURIComponent(FILE_NAME) + '?v=' + Date.now();
-            const res = await fetch(fileUrl);
-            if (!res.ok) throw new Error("Database file connection failed.");
-            
-            const ab = await res.arrayBuffer();
-            const wb = XLSX.read(new Uint8Array(ab), {type: 'array'});
-            const ws = wb.Sheets[SHEET_NAME];
-            if (!ws) throw new Error("Excel worksheet not found.");
-
-            const json = XLSX.utils.sheet_to_json(ws, {header: 1});
-
-            // Handle Merged Item Descriptions in Column C
-            const merges = ws['!merges'] || [];
-            merges.forEach(m => {
-                if (m.s.c <= 2 && m.e.c >= 2) {
-                    const val = json[m.s.r][2];
-                    for (let r = m.s.r; r <= m.e.r; r++) { if (json[r]) json[r][2] = val; }
-                }
-            });
-
-            masterData = json.slice(6).map(row => {
-                if(row[2]) row[2] = row[2].toString().trim();
-                return row;
-            }).filter(row => row[2]);
-
-            statusEl.innerText = "● LIVE SYNC ACTIVE: " + masterData.length + " ITEMS LOADED";
-            document.getElementById('searchInput').disabled = false;
-        } catch (e) {
-            statusEl.innerText = "● CONNECTION ERROR: " + e.message;
+        // LOAD FILE (Supports .xlsx or .xlsm)
+        async function fetchExcel() {
+            const fileName = "TUV Training Log.xlsx"; // Ensure this matches your file (or change to .xlsm)
+            try {
+                const response = await fetch(fileName);
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                fullData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                renderFullTable();
+            } catch (err) {
+                console.error("File not found or error loading:", err);
+                alert("Please ensure 'TUV Training Log' is uploaded to the same folder.");
+            }
         }
-    });
 
-    const searchInput = document.getElementById('searchInput');
-    const suggestions = document.getElementById('suggestions');
+        function liveSearch() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const suggBox = document.getElementById('suggestions');
+            if(val.length < 1) { suggBox.classList.add('hidden'); return; }
 
-    searchInput.oninput = function() {
-        const query = this.value.toLowerCase();
-        suggestions.innerHTML = "";
-        if (!query) { suggestions.style.display = 'none'; return; }
+            const matches = fullData.slice(1).filter(r => 
+                String(r[1]).toLowerCase().includes(val) || 
+                String(r[2]).toLowerCase().includes(val)
+            );
 
-        const matches = masterData.filter(r => r[2] && r[2].toLowerCase().includes(query));
-        
-        matches.slice(0, 15).forEach(row => {
-            const div = document.createElement('div');
-            div.textContent = row[2];
-            div.onclick = () => {
-                searchInput.value = row[2];
-                suggestions.style.display = 'none';
-                updateDisplay(row);
-            };
-            suggestions.appendChild(div);
-        });
-        suggestions.style.display = matches.length ? 'block' : 'none';
-    };
+            suggBox.innerHTML = matches.map(r => `
+                <div onclick="selectUser('${r[1]}')" class="p-4 hover:bg-slate-50 cursor-pointer border-b border-gray-50 flex justify-between">
+                    <span class="font-bold text-slate-700">${r[2]}</span>
+                    <span class="text-slate-400 text-sm">ID: ${r[1]}</span>
+                </div>
+            `).join('');
+            suggBox.classList.toggle('hidden', matches.length === 0);
+        }
 
-    function updateDisplay(row) {
-        // Mapping based on your provided column structure
-        document.getElementById('colL').innerText = row[11] || "0";
-        document.getElementById('colM').innerText = row[12] || "0";
-        document.getElementById('colN').innerText = row[13] || "0";
-        document.getElementById('colJ').innerText = row[9] || "0";
-        document.getElementById('colK').innerText = row[10] || "0";
-        document.getElementById('colI').innerText = row[8] || "0";
-        document.getElementById('colO').innerText = row[14] || "0";
-        document.getElementById('colQ').innerText = row[16] || "0";
-        document.getElementById('colF').innerText = row[5] || "0";
-        document.getElementById('colP').innerText = row[15] || "0";
-    }
+        function selectUser(id) {
+            const row = fullData.find(r => String(r[1]) === String(id));
+            document.getElementById('suggestions').classList.add('hidden');
+            document.getElementById('searchInput').value = row[2];
+            displayDashboard(row);
+        }
 
-    document.addEventListener('click', (e) => {
-        if (e.target !== searchInput) suggestions.style.display = 'none';
-    });
-</script>
+        function displayDashboard(row) {
+            document.getElementById('dashboardContent').classList.remove('hidden');
+            const grid = document.getElementById('cardGrid');
 
+            // Calculation Logic
+            const expiry = new Date(row[6]);
+            const today = new Date();
+            const daysLeft = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+            
+            let status = { text: 'VALID', color: 'text-green-500', icon: 'fa-circle-check', bg: 'bg-green-50' };
+            if (daysLeft <= 0) status = { text: 'EXPIRED', color: 'text-red-500', icon: 'fa-circle-xmark', bg: 'bg-red-50' };
+            else if (daysLeft <= 30) status = { text: 'EXPIRING SOON', color: 'text-orange-500', icon: 'fa-triangle-exclamation', bg: 'bg-orange-50' };
+
+            const fields = [
+                { label: 'Position', val: row[3], icon: 'fa-briefcase' },
+                { label: 'Type', val: row[4], icon: 'fa-tags' },
+                { label: 'Issue Date', val: formatDate(row[5]), icon: 'fa-calendar-plus' },
+                { label: 'Expiry Date', val: formatDate(row[6]), icon: 'fa-calendar-xmark' },
+                { label: 'Remaining Days', val: daysLeft, icon: 'fa-clock', highlight: true },
+                { label: 'Status', val: status.text, status: true },
+                { label: 'Institute', val: row[7], icon: 'fa-building' },
+                { label: 'Renewal Date', val: row[8] || 'N/A', icon: 'fa-arrows-rotate' },
+                { label: 'Certificate', val: row[9], icon: 'fa-file-contract' },
+                { label: 'Emp Status', val: row[10], icon: 'fa-user-tag' },
+                { label: 'Remarks', val: row[11] || 'None', icon: 'fa-comment-dots' },
+                { label: 'Physical Copy', val: row[12], icon: 'fa-hard-drive' }
+            ];
+
+            grid.innerHTML = fields.map(f => `
+                <div class="bg-white p-6 rounded-card soft-shadow border border-gray-50 flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl ${f.status ? status.bg : 'bg-slate-50'} flex items-center justify-center text-xl">
+                        <i class="fa ${f.status ? f.icon || status.icon : f.icon} ${f.status ? status.color : 'text-slate-400'}"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">${f.label}</p>
+                        <p class="text-lg font-bold ${f.status ? status.color : 'text-slate-700'}">${f.val}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(date) {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            return isNaN(d) ? date : d.toLocaleDateString('en-GB');
+        }
+
+        function renderFullTable() {
+            const head = document.getElementById('tableHeader');
+            const body = document.getElementById('tableBody');
+            head.innerHTML = fullData[0].map(h => `<th class="p-4 font-semibold">${h}</th>`).join('');
+            body.innerHTML = fullData.slice(1).map(row => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    ${row.map(cell => `<td class="p-4 text-sm border-b border-gray-50">${cell || ''}</td>`).join('')}
+                </tr>
+            `).join('');
+        }
+
+        function togglePage(num) {
+            document.getElementById('page1').classList.toggle('hidden', num !== 1);
+            document.getElementById('page2').classList.toggle('hidden', num !== 2);
+            document.getElementById('tab1').className = num === 1 ? 'px-8 py-3 navy-gradient text-white rounded-full font-bold soft-shadow transition-all' : 'px-8 py-3 bg-white text-slate-600 rounded-full font-bold soft-shadow border border-gray-100';
+            document.getElementById('tab2').className = num === 2 ? 'px-8 py-3 navy-gradient text-white rounded-full font-bold soft-shadow transition-all' : 'px-8 py-3 bg-white text-slate-600 rounded-full font-bold soft-shadow border border-gray-100';
+        }
+
+        window.onload = fetchExcel;
+    </script>
 </body>
 </html>
-
-
-
